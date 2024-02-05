@@ -1,0 +1,18 @@
+/* Default styles for all screens */
+.image-container {
+    width: 100%;
+}
+
+/* Media query for tablets (portrait and landscape) */
+@media only screen and (min-width: 600px) and (max-width: 991px) {
+    .image-container {
+        width: 50%;
+    }
+}
+
+/* Media query for laptops and larger screens */
+@media only screen and (min-width: 992px) {
+    .image-container {
+        width: 30%;
+    }
+}
