@@ -103,7 +103,7 @@ const MyForm = () => {
       } else {
         res = await axios.post(
           `${SERVER_URL}:${SERVER_PORT}/projects/update`,
-          { ...values },
+          { ...values, pid: id },
           {
             withCredentials: true,
           }
