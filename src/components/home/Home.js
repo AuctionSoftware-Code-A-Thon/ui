@@ -18,7 +18,6 @@ import "./Home.css";
 
 const Home = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
   const [type, setType] = useState("All");
   const [totalPages, setTotalPages] = useState(0);
   const [page, setPage] = React.useState(0);
@@ -47,7 +46,6 @@ const Home = () => {
 
   const {
     projects,
-    applyFilter,
     incrementLoading,
     decrementLoading,
     setProjects,
