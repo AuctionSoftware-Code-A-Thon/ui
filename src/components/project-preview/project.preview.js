@@ -25,9 +25,13 @@ const ProjectPreview = () => {
   const handleAccept = async () => {
     setModelOpen(false);
     incrementLoading();
-    await axios.post(`${SERVER_URL}:${SERVER_PORT}/projects/delete/${id}`, {
-      withCredentials: true,
-    });
+    await axios.post(
+      `${SERVER_URL}:${SERVER_PORT}/projects/delete`,
+      { pid: id },
+      {
+        withCredentials: true,
+      }
+    );
     decrementLoading();
     navigate("/home");
   };
@@ -35,7 +39,7 @@ const ProjectPreview = () => {
     if (id) {
       const getTheGameData = async (id) => {
         incrementLoading();
-        const res = await axios.get(
+        const res = await axios.post(
           `${SERVER_URL}:${SERVER_PORT}/project/get`,
           { pid: id },
           {

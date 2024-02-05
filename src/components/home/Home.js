@@ -5,7 +5,6 @@ import {
   MenuItem,
   Select,
   TablePagination,
-  TextField,
   Typography,
 } from "@mui/material";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
@@ -22,7 +21,7 @@ const Home = () => {
   const [name, setName] = useState("");
   const [type, setType] = useState("All");
   const [totalPages, setTotalPages] = useState(0);
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [isDescendingOrder, setIsDescendingOrder] = React.useState(undefined);
   const handleChangePage = (event, newPage) => {
@@ -71,6 +70,7 @@ const Home = () => {
             pageNumber: page + 1,
             projectsPerPage: rowsPerPage,
             pCategory,
+            isDataSorted: isDescendingOrder !== undefined ? true : false,
             isDescendingOrder,
           },
           {
@@ -162,21 +162,48 @@ const Home = () => {
 
           <Grid2 container direction={"row"} rowSpacing={1} columnSpacing={1}>
             <Grid2 xs={12} lg={4}>
-              <div>
-                <TextField
-                  id="name"
-                  label="Name"
-                  name="name"
-                  fullWidth
-                  value={name}
+              <FormControl fullWidth size="medium">
+                <InputLabel id="type">Sort by category</InputLabel>
+                <Select
+                  labelId="sortByCategory"
+                  id="sort"
+                  value={
+                    isDescendingOrder !== undefined
+                      ? !isDescendingOrder
+                        ? "ascending"
+                        : "descending"
+                      : "None"
+                  }
+                  label="sort"
                   onChange={(ele) => {
-                    setName(ele?.target?.value);
+                    setIsDescendingOrder(
+                      ele?.target?.value === "None"
+                        ? undefined
+                        : ele?.target?.value === "ascending"
+                        ? false
+                        : true
+                    );
+                    setPage(0);
+                    fetchAllProjects(
+                      0,
+                      rowsPerPage,
+                      type !== "All" ? type : undefined,
+                      ele?.target?.value === "None"
+                        ? undefined
+                        : ele?.target?.value === "ascending"
+                        ? false
+                        : true
+                    );
                   }}
-                  InputProps={{
-                    style: { backgroundColor: "white" },
-                  }}
-                />
-              </div>
+                  style={{ backgroundColor: "white" }}
+                >
+                  {["None", "ascending", "descending"].map((item, index) => (
+                    <MenuItem value={item} key={index}>
+                      {item}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid2>
             <Grid2 xs={12} lg={4}>
               <FormControl fullWidth size="medium">
@@ -190,7 +217,7 @@ const Home = () => {
                     setType(ele?.target?.value);
                     setPage(0);
                     fetchAllProjects(
-                      1,
+                      0,
                       rowsPerPage,
                       ele?.target?.value !== "All"
                         ? ele?.target?.value
@@ -208,16 +235,7 @@ const Home = () => {
                 </Select>
               </FormControl>
             </Grid2>
-            <Grid2 xs={5} lg={1}>
-              <Button
-                variant="contained"
-                onClick={() => {
-                  applyFilter(name, type);
-                }}
-              >
-                Search
-              </Button>
-            </Grid2>
+
             <Grid2 xs={6} lg={2}>
               <Button
                 variant="outlined"

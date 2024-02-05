@@ -9,7 +9,13 @@ import { useNavigate } from "react-router-dom";
 
 export default function CustomCard(props) {
   const navigate = useNavigate();
-  const { pid = "", pname = "", pdescription = "", purl = "" } = props;
+  const {
+    pid = "",
+    pname = "",
+    pdescription = "",
+    purl = "",
+    pCategory = "",
+  } = props;
   const handleClick = (id) => {
     navigate("/project/" + id);
   };
@@ -18,7 +24,7 @@ export default function CustomCard(props) {
       sx={{ maxWidth: 345, maxHeight: 300 }}
       style={{ backgroundColor: "lightgray" }}
     >
-      <CardHeader title={pname} />
+      <CardHeader title={`${pname} (${pCategory})`} />
       <CardMedia component="img" height="100" image={purl} alt={"No image"} />
       <CardContent>
         <Typography variant="body2" color="text.secondary">

@@ -11,18 +11,11 @@ import { GlobalContext } from "../..";
 import { SERVER_PORT, SERVER_URL } from "../../helpers/constants";
 
 const validationSchema = yup.object().shape({
-  pricing: yup.object().shape({
-    hourly: yup.string().required("Hourly price is required"),
-    perGame: yup.string().required("Per game price is required"),
-  }),
-  image: yup.object().shape({
-    description: yup.string().required("Image description is required"),
-    path: yup.string().required("Image path is required"),
-  }),
-  name: yup.string().required("Name is required"),
-  description: yup.string().required("Description is required"),
-  type: yup.string().required("Type is required"),
-  minimumAge: yup.number().required("Minimum age is required"),
+  pname: yup.string().required("Name is required"),
+  pdescription: yup.string().required("Description is required"),
+  pCategory: yup.string().required("Category is required"),
+  funds: yup.string().required("Funds is required"),
+  purl: yup.string().required("URL is required"),
 });
 
 const MyForm = () => {
@@ -30,19 +23,13 @@ const MyForm = () => {
   const [isEdit, setEdit] = useState(id !== undefined);
   const { incrementLoading, decrementLoading } = useContext(GlobalContext);
   const navigate = useNavigate();
-  const [gameData, setGameData] = useState({
-    name: "",
-    description: "",
-    type: "",
-    minimumAge: "",
-    pricing: {
-      hourly: "",
-      perGame: "",
-    },
-    image: {
-      description: "",
-      path: "",
-    },
+  const [project, setProject] = useState({
+    pid: "",
+    pname: "",
+    pdescription: "",
+    pCategory: "",
+    funds: "",
+    purl: "",
     isEdit: false,
   });
   const getTheGameData = async (id) => {
@@ -61,7 +48,7 @@ const MyForm = () => {
         .then(
           (res) => {
             if (res?.data !== null) {
-              setGameData(res?.data);
+              setProject(res?.data);
             } else {
               setEdit(false);
             }
@@ -71,6 +58,7 @@ const MyForm = () => {
           }
         );
     } catch (error) {
+      setEdit(false);
       console.log(error);
     } finally {
       decrementLoading();
@@ -85,24 +73,21 @@ const MyForm = () => {
   }, [id]);
   useEffect(() => {
     formik.setValues({
-      pricing: gameData?.pricing,
-      image: gameData?.image,
-      name: gameData?.name,
-      description: gameData?.description,
-      type: gameData?.type,
-      minimumAge: gameData?.minimumAge,
+      pname: project?.pname,
+      pdescription: project?.pdescription,
+      pCategory: project?.pCategory,
+      funds: project?.funds,
+      purl: project?.purl,
     });
     // eslint-disable-next-line
-  }, [gameData]);
+  }, [project]);
   const formik = useFormik({
     initialValues: {
-      pricing: gameData?.pricing,
-      image: gameData?.image,
-
-      name: gameData?.name,
-      description: gameData?.description,
-      type: gameData?.type,
-      minimumAge: gameData?.minimumAge,
+      pname: "",
+      pdescription: "",
+      pCategory: "",
+      funds: "",
+      purl: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -124,7 +109,7 @@ const MyForm = () => {
           }
         );
       }
-      navigate(`/project/${res?.data?._id}`);
+      navigate(`/project/${res?.data?.pid}`);
     },
   });
   const handleCancel = () => {
@@ -138,89 +123,60 @@ const MyForm = () => {
     <Paper elevation={3} sx={{ marginRight: "2%", marginLeft: "2%" }}>
       <Box sx={{ padding: 5 }}>
         <Typography variant="h6" gutterBottom sx={{ paddingBottom: 5 }}>
-          {!isEdit ? "New Game" : "Edit Game"}
+          {!isEdit ? "New Project" : "Edit Project"}
         </Typography>
         <form onSubmit={formik.handleSubmit}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <TextField
-                id="name"
-                label="Title"
-                name="name"
+                id="pname"
+                label="Name"
+                name="pname"
                 required
                 fullWidth
-                value={formik.values.name}
+                value={formik.values.pname}
                 onChange={formik.handleChange}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 label="Description"
-                name="description"
+                name="pdescription"
                 fullWidth
                 multiline
                 rows={3}
-                value={formik.values.description}
+                value={formik.values.pdescription}
                 required
                 onChange={formik.handleChange}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
-                label="Type"
-                name="type"
+                label="Category"
+                name="pCategory"
                 fullWidth
-                value={formik.values.type}
+                value={formik.values.pCategory}
+                required
+                onChange={formik.handleChange}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                label="Funds"
+                name="funds"
+                fullWidth
+                value={formik.values.funds}
                 required
                 onChange={formik.handleChange}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
-                label="Minimum age"
-                name="minimumAge"
+                label="URL"
+                name="purl"
                 fullWidth
-                value={formik.values.minimumAge}
-                required
-                onChange={formik.handleChange}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                label="Pricing (Hourly)"
-                name="pricing.hourly"
-                fullWidth
-                value={formik.values.pricing.hourly}
-                required
-                onChange={formik.handleChange}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                label="Pricing (Per Game)"
-                name="pricing.perGame"
-                fullWidth
-                value={formik.values.pricing.perGame}
-                required
-                onChange={formik.handleChange}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                label="Image Path"
-                name="image.path"
-                fullWidth
-                value={formik.values.image.path}
-                required
-                onChange={formik.handleChange}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                label="Image alt text"
-                name="image.description"
-                fullWidth
-                value={formik.values.image.description}
+                value={formik.values.purl}
                 onChange={formik.handleChange}
                 required
               />
