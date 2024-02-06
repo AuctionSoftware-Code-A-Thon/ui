@@ -148,7 +148,7 @@ const Home = () => {
           </Grid2>
           <Grid2>
             <Typography variant="h3" gutterBottom>
-              AutionSoftware Code-A-Thon
+              AuctionSoftware Code-A-Thon
             </Typography>
           </Grid2>
           <Grid2>
